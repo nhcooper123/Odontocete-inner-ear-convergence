@@ -1,0 +1,125 @@
+---
+title: "Odontocete-inner-ear-convergence_GPA-&-PCA"
+author: "Travis Park & Natalie Cooper"
+date: "17 September 2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Odontocete inner ear convergence: GPA & PCA
+
+This document will allow you to perform generalised procrustes analysis (GPA) and Principal Components Analysis (PCA) on landmarks placed on a sample of odontocete cochleae.  
+
+## Load libraries
+
+First, we will load in the libraries that will be used to do all the analyses:
+
+```{r}
+library(here)
+library(geomorph)
+```
+
+## Input shape data
+
+Now we need to bring in the shape data. These are in a series of .pts files which contain the 3D coordinates of the landmarks that were placed on the 3D cochlea models. We will need to tell the computer how many landmarks there are, how many dimensions the data will be in and define a path to the folder the .pts files are located in: 
+
+```{r}
+n.landmarks <- 371
+n.dim <- 3
+Ptspath <- here("Landmarks/L371-cochlea-dataset/RDC_L371-cochlea_pts")
+```
+
+Once we know where the files are, we can then make a list of the files to import in. The code to do this below is from Ryan Felice, orignallly written by Anne-Claire Fabre, which uses unmodified .pts data format from IDAV Landmark:
+
+```{r}
+ptslist <- dir(path = Ptspath, pattern = '.pts', recursive = TRUE)
+```
+
+Next we want to transform this list of files into a matrix so R can run analyses on it. We do this by:
+
+```{r}
+ptsarray <- array(dim = c(n.landmarks, n.dim, length(ptslist)))
+for (i in 1:length(ptslist)) {
+  ptsarray[, , i] <-
+    as.matrix(read.table(
+      file = paste0(Ptspath, "/" , ptslist[i]),
+      skip = 2,
+      header = FALSE,
+      sep = "",
+      row.names = 1
+    ))
+}
+```
+
+## Ordinate shape data
+
+Now that we have all our landmark coordinates loaded in and in matrix form, we now want to place them into a common ordination scheme. Additionally, we will also remove the effects of position, scale and orientation. The method used to do this in this analysis is Procrustes superimposition.  
+
+The function used in this analysis (gpagen) requires a matrix that tells it what positions the sliding semilandmarks will slide between. We load this in first:
+
+```{r}
+slidematrix <- as.matrix(read.csv(here("Data/Sliding-matrix_L371-cochlea-dataset_1.csv")))
+```
+
+Additionally, we will also need to give R the metadata of the specimens (e.g. taxon name, habitat, regime). This will be used in downstream analyses, but we'll load it in now:
+
+```{r}
+OIEC_metadata <- read.csv(here("Data/RDC_Habitat-type_2.csv"))
+```
+
+Then we can actually perform the Procrustes superimposition:
+
+```{r}
+OIEC_gpa <- gpagen(ptsarray, curves = slidematrix)
+```
+
+Now we can use the metadata to assign the taxon names to the corresponding procrustes coordinates (always make sure that both are in the same order before doing this):
+
+```{r}
+dimnames(OIEC_gpa$coords)[[3]] <- OIEC_metadata$Taxon
+```
+
+## Principal Components Analysis
+
+Next, we will take out procrustes coordinates and project them into tangent space along their main axes of variation i.e. their principal components.we will use the Geomorph function 'plotTangentSpace' to do this:
+
+```{r}
+OIEC_pca <- plotTangentSpace(OIEC_gpa$coords, 
+                            groups = OIEC_metadata$Habitat,
+                            legend = TRUE, label = TRUE)
+```
+
+We can visualise the outputs of the PCA in several different ways:
+
+```{r}
+# Summary of variance associated with each PCA axis
+OIEC_pca$pc.summary
+
+# PC scores for each species
+OIEC_pca$pc.scores
+
+# Show barplot of variance explained by each PC
+barplot(OIEC_pca$pc.summary$sdev^2 / 
+          sum(OIEC_pca$pc.summary$sdev^2))
+
+# Eigenvectors
+OIEC_pca$rotation
+```
+
+Let's also write the PC scores to a csv file so that we can use them in later analyses:
+
+```{r}
+write.csv(OIEC_pcscores, file = here("Data/OIEC_pcscores_1.csv"))
+```
+
+Finally, in order to perform further analyses on the PC scores we will combine them into a dataframe with the species names from the metadata loaded in above:
+
+```{r}
+OIEC_df <- data.frame(OIEC_pca$pc.scores,
+                     species = OIEC_metadata$Taxon)
+```

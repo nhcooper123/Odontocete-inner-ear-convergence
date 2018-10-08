@@ -1,0 +1,184 @@
+---
+title: "Odontocete-inner-ear-convergence_Kmult-&-Surface-analysis"
+author: "Travis Park & Natalie Cooper"
+date: "24 September 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Odontocete inner ear convergence: Kmult & Surface analysis
+
+This document will allow you to use the Kmult statistic to calculate phylogenetic signal in the data and then use the package SURFACE to fit Ornstein_Uhlenbeck (OU) models with stepwise Akaike Information Criterion (AIC) to identify convergent regimes on a phylogeny of odontcetes. 
+
+## Load libraries
+
+First, we will load in the libraries that will be used to do all the analyses:
+
+```{r}
+library(ape)
+library(geomorph)
+library(surface)
+library(tibble)
+```
+
+## Loading in the phylogeny
+
+The next thing we need to do is load in the odontocete phylogeny that we will use for our analyses. In this analysis it is the molecular phylogeny of extant odontocetes from Steeman et al 2009:
+
+```{r}
+whaletree <- read.nexus(here("Data/Steeman-et-al-2009.nex"))
+```
+
+However, this phylogeny contains taxa that are not part of our sample. These additional taxa therefore need to be removed from the phylogeny so that only taxa we have PC scores for remain. There are several ways to do this and some are more efficient than others. Here though I have just manually created a list of the taxa to be dropped from the tree (this would become unfeasible if dealing with large numbers of taxa) and used that. Once the list is made we then use it to create our pruned tree:
+
+```{r}
+droppedtips <- c("Balaena_mysticetus",
+                 "Balaenoptera_physalus", 
+                 "Eubalaena_australis", 
+                 "Eubalaena_glacialis", 
+                 "Eubalaena_japonica", 
+                 "Caperea_marginata", 
+                 "Eschrichtius_robustus", 
+                 "Balaenoptera_acutorostrata", 
+                 "Balaenoptera_bonaerensis", 
+                 "Megaptera_novaeangliae", 
+                 "Balaenoptera_musculus",
+                 "Balaenoptera_omurai", 
+                 "Balaenoptera_borealis", 
+                 "Balaenoptera_brydei", 
+                 "Balaenoptera_edeni",
+                 "Platanista_minor", 
+                 "Berardius_bairdii", 
+                 "Indopacetus_pacificus",
+                 "Hyperoodon_planifrons", 
+                 "Mesoplodon_traversii", 
+                 "Mesoplodon_ginkgodens", 
+                 "Mesoplodon_europaeus", 
+                 "Mesoplodon_bowdoini", 
+                 "Mesoplodon_carlhubbsi",  
+                 "Mesoplodon_layardii", 
+                 "Mesoplodon_densirostris", 
+                 "Mesoplodon_stejnegeri", 
+                 "Mesoplodon_perrini", 
+                 "Mesoplodon_peruvianus", 
+                 "Phocoena_sinus", 
+                 "Globicephala_macrorhynchus",
+                 "Lissodelphis_borealis", 
+                 "Lissodelphis_peronii", 
+                 "Cephalorhynchus_hectori", 
+                 "Cephalorhynchus_eutropia", 
+                 "Stenella_clymene", 
+                 "Stenella_frontalis", 
+                 "Delphinus_tropicalis", 
+                 "Delphinus_capensis")
+cleanwhaletree <- drop.tip(whaletree, droppedtips)
+```
+
+We'll also save this pruned tree to file so that we can load it into other scripts easily in future:
+
+```{r}
+write.tree(cleanwhaletree, file = here("Data/OIEC_cleanwhaletree_1.tree"))
+```
+
+## Testing for phlyogenetic signal
+
+The first thing we want to do now that we have our data procrustes aligned and the phylogeny pruned is to test what degree of phlyogenetic signal there is in the data. To do this we will use the Kmult statistic from Adams (2014), which is a multivariate version of the the K-statistic (Blomberg et al 2003) for high-dimensional multivariate data. 
+
+To do this we make a dataframe containing the procrustes coordinates and the phylogeny. Note that for this particular analysis we are using a geomorph dataframe:
+
+```{r}
+OIEC_gdf <- geomorph.data.frame(coords = OIEC_gpa$coords, phy = cleanwhaletree)
+```
+
+Then we calculate the phylogenetic signal (Kmult) to test whether there is phylogenetic signal in the cochlea shape of the sample and have a look at the values:
+
+```{r}
+OIEC_Kmult <- physignal(OIEC_gdf$coords, cleanwhaletree)
+summary(OIEC_Kmult)
+```
+
+## Running the SURFACE analysis
+
+Next we want to try and detect convergent evolution in the shape of odontocete cochleae. to do this we will use the SURFACE package by Ingram & Mahler (2013). it uses an OU process (a random walk where trait values are pulled back towards an optimal value i.e. an adaptive peak/long term mean). the application of the OU process to evolution along a phylogenetic tree is known as a Hansen model. Different branches of the phylogeny can be modeled as having different optima.  
+
+A SURFACE analysis is split into a forward phase and a backward phase. in the forward phase SURFACE adds regimes to a Hansen model, starting with a model in which the entire clade is in a single regime. Maximum liklihood is then used to estimate parameter values and model likelihoods. regime shifts are then added one at a time to the origin of each branch. Likelihoood estimation is then repeated and the branch with the lowest AICc score is retained. This is repeated until the change in AICc is less than predetermined value (usually 0). In the backward phase, the completely fitted Hansen model is then used to test pairwise collapses of regimes into a single convergent regime. AICc scores are then calculated for each of these models and compared to the the previous model. If it improves the AICc score then it is retained as a convergent regime. this is repeated until themodel stops improving beyond a threshold.
+
+### Forward phase
+
+We first need to prepare the data and the phylogeny so that the are in the correct format for performing a SURFACE analysis. Let's start by adding node names to each node in the phlyogeny and checking its structure:
+
+```{r}
+cleanwhaletree_nodes <- nameNodes(cleanwhaletree)
+str(cleanwhaletree_nodes)
+```
+
+Next, we will make the rownames species names and remove that column from the dataframe (X in this case). We will then select the first 6 PC scores to use for the SURFACE analysis:
+
+```{r}
+rownames(OIEC_df) <- OIEC_df$species
+OIEC_df_2PCS <- OIEC_df[, 1:2]
+as.tibble(OIEC_df_2PCS)
+```
+
+We then need to convert the data into OUCH format (the format from the package OUCH which SURFACE uses):
+
+```{r}
+ouchlist <- convertTreeData(cleanwhaletree_nodes, OIEC_df_2PCS)
+ouchtree <- ouchlist[[1]]
+ouchdata <- ouchlist[[2]]
+```
+
+Now we can finally run the forward phase of the SURFACE analysis:
+
+```{r}
+fwd <- surfaceForward(ouchtree, ouchdata, aic_threshold = 0, exclude = 0,
+                    verbose = FALSE, plotaic = FALSE)
+```
+
+Let's have a look at some outputs and summary info:
+
+```{r}
+k <- length(fwd) # optimal number of regimes
+fwdsummary <- surfaceSummary(fwd) # summary info
+names(fwdsummary) # gets the names of the fwdsummary object
+fwdsummary$aics # shows the AICc scores
+```
+
+### Backward phase
+
+Now we run the backwards phase to test for convergent regimes:
+
+```{r}
+bwd <- surfaceBackward(ouchtree, ouchdata, starting_model = fwd[[k]], aic_threshold = 0,
+                     only_best = TRUE, verbose = FALSE, plotaic = FALSE)
+```
+
+Let's have a look at the backward phase summary info and outputs:
+
+```{r}
+bwdsummary <- surfaceSummary(bwd)
+kk <- length(bwd)
+bwdsummary$alpha
+bwdsummary$sigma_squared
+bwdsummary$theta
+bwdsummary$n_regimes # optimal number of regimes
+```
+
+Now we can plot it and see those convergent regimes on the phylogeny:
+
+```{r}
+surfaceTreePlot(cleanwhaletree_nodes, bwd[[kk]], labelshifts = TRUE)
+```
+
+We can also prodce scatterplots of trait values and optima:
+
+```{r}
+par(mfrow=c(1,2), mai=c(0.8,0.8,0.2,0.2))
+surfaceTraitPlot(mydata, bwd[[kk]], whattraits = c(1,2))
+surfaceTraitPlot(mydata, bwd[[kk]], whattraits = c(3,2))
+```
+
+In the next document we will take these convergent regimes and test to see if they are statistically significant.

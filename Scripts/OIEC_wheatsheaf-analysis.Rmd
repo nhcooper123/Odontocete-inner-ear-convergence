@@ -1,0 +1,108 @@
+---
+title: "OIEC_wheatsheaf-analysis"
+author: "Travis Park & Natalie Cooper"
+date: "3 October 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# OIEC wheatsheaf analysis
+
+This document will allow you to calculate the Wheatsheaf index and determine if the value of the index obtained is stronger than is expected by chance. This is a simple metric that provides an index of the strength of convergent evolution incorporating both phenotype similarity and phylogenetic relatedness.
+
+## Load libraries
+
+Let's load in the libraries needed for this analysis:
+
+```{r}
+library(here)
+library(dplyr)
+library(windex)
+```
+
+## Data prep: merging tables & loading the phylogeny
+
+The datasets required for the functions of the windex package must have the first column called 'species' and containing a list of species names that match those in the phylogenetic tree. One other column must be a vector denoting which species are part of the focal group (1) and which are in the non-focal group (0). Remaining columns contain values of traits that can be quantified. in order to do this we will need to combine two csv files, one containing the species names and whether they re part of focal group or not and one containing the PC scores from the PCA. TO this we will use the 'inner_join' function from the 'dplyr' package. This will need to be repeated once for each convergent regime that is being tested as the focal species' will change each time:
+
+### Regime 1
+
+```{r}
+tbl1 <- read.csv(here("Data/OIEC_wheatsheaf-metadata_green-regime_1.csv"))
+tbl2 <- read.csv(here("Data/OIEC_pcscores_1.csv"))
+OIEC_wheatsheafdf_greenreg <- inner_join(tbl1, tbl2, by = c("species" = "X"))
+```
+
+### Regime 2
+
+```{r}
+tbl3 <- read.csv(here("Data/OIEC_wheatsheaf-metadata_red-regime_1.csv"))
+tbl4 <- read.csv(here("Data/OIEC_pcscores_1.csv"))
+OIEC_wheatsheafdf_redreg <- inner_join(tbl3, tbl4, by = c("species" = "X"))
+```
+
+### Regime 3
+
+```{r}
+tbl5 <- read.csv(here("Data/OIEC_wheatsheaf-metadata_blue-regime_1.csv"))
+tbl6 <- read.csv(here("Data/OIEC_pcscores_1.csv"))
+OIEC_wheatsheafdf_bluereg <- inner_join(tbl5, tbl6, by = c("species" = "X"))
+```
+
+### Loading the phylogeny
+
+```{r}
+cleanwhaletree <- read.tree(here("Data/OIEC_cleanwhaletree_1.tree"))
+```
+
+## Calculating the Wheatsheaf index
+
+Now we can actually put all this together and calculate the Wheatsheaf index. Again, we will need to do this three times, once for each convergent regime found from the SURFACE analysis:
+
+### Regime 1
+
+```{r}
+windex_greenreg <- windex(OIEC_wheatsheafdf_greenreg, cleanwhaletree, traits = c("PC1","PC2"))
+windex_greenreg # view the results
+```
+
+### Regime 2
+
+```{r}
+windex_redreg <- windex(OIEC_wheatsheafdf_redreg, cleanwhaletree, traits = c("PC1","PC2"))
+windex_redreg # view results
+```
+
+### Regime 3
+
+```{r}
+windex_bluereg <- windex(OIEC_wheatsheafdf_bluereg, cleanwhaletree, traits = c("PC1","PC2"))
+windex_bluereg # view the results
+```
+
+## Calculating P-value for the Wheatsheaf index values
+
+Here, we are testing if the Wheatsheaf index value is higher than that expected by chance. Like above, it will need to be repeated three times, once for each econvergent regime:
+
+### Regime 1
+
+```{r}
+windex_greenreg_pval <- test.windex(OIEC_wheatsheafdf_greenreg, cleanwhaletree, traits = c("PC1","PC2"), focal = OIEC_wheatsheafdf_greenreg[, 2], reps = 1000)
+windex_greenreg_pval # view the result
+```
+
+### Regime 2
+
+```{r}
+windex_redreg_pval <- test.windex(OIEC_wheatsheafdf_redreg, cleanwhaletree, traits = c("PC1","PC2"), focal = OIEC_wheatsheafdf_redreg[, 2], reps = 1000)
+windex_redreg_pval # view the result
+```
+
+### Regime 3
+
+```{r}
+windex_bluereg_pval <- test.windex(OIEC_wheatsheafdf_bluereg, cleanwhaletree, traits = c("PC1","PC2"), focal = OIEC_wheatsheafdf_bluereg[, 2], reps = 1000)
+windex_bluereg_pval # view the result
+```

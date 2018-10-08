@@ -1,0 +1,150 @@
+---
+title: "Odontocete-inner-ear-convergence_C-metric-&-sig-analysis"
+author: "Travis Park & Natalie Cooper"
+date: "26 September 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Odontocete inner ear convergence: C-metric & significance analysis
+
+This document will allow you to use the convergence metrics of Stayton (2015) to measure the convergence in the convergent regimes found by the SURFACE analysis. Additionally it will test to see if this convergence is statistically significant. We will run three separate analyses, one for each regime.
+
+## Load library
+
+Let's load the package needed to run this analysis:
+
+```{r}
+library(convevol)
+```
+
+## Data prep
+
+Before running the analysis though, we need to convert the dataframe containing the PC scores and the species names into a matrix so that we run the analysis:
+
+```{r}
+OIEC_Cmetricmatrix <- as.matrix(array(RDC_df[, 1:2])) # The numbers here are what PCs you select for the analysis
+```
+
+## Convergent regime 1
+
+Select which tips are hypothesised to be convergent:
+
+```{r}
+convtips1 <- c("Kogia_sima",
+               "Kogia_breviceps",
+               "Phocoenoides_dalli")
+```
+
+Run the analysis to test whther they are convergent based on the first four C-metrics of Stayton (2015):
+
+```{r}
+ConvReg1 <- convrat(phyl = cleanwhaletree,
+                        phendata = OIEC_Cmetricmatrix,
+                        convtips = convtips1)
+```
+
+Have a look at the reuslts:
+
+```{r}
+ConvReg1
+```
+
+Now we can get the significance values of this analysis. Note that this can take quite a long time to run:
+
+```{r}
+ConvReg1_pval <- convratsig(phyl = cleanwhaletree,
+                   phendata = OIEC_Cmetricmatrix,
+                   convtips = convtips1,
+                   nsim = 1000)
+```
+
+Have a look at the results:
+
+```{r}
+ConvReg1_pval
+```
+
+## Convergent regime 2
+
+Select which tips are hypothesised to be convergent:
+
+```{r}
+convtips2 <- c("Berardius_arnuxii",
+              "Mesoplodon_grayi",
+              "Mesoplodon_hectori",
+              "Mesoplodon_bidens",
+              "Hyperoodon_ampullatus",
+              "Tasmacetus_shepherdi",
+              "Physeter_macrocephalus")
+```
+
+Run the analysis to test whther they are convergent based on the first four C-mtrics of Stayton (2015):
+
+```{r}
+ConvReg2 <- convrat(phyl = cleanwhaletree,
+                        phendata = OIEC_Cmetricmatrix,
+                        convtips = convtips2)
+```
+
+Have a look at the reuslts:
+
+```{r}
+ConvReg2
+```
+
+Now we can get the significance values of this analysis. Note that this can take quite a long time to run:
+
+```{r}
+ConvReg2_pval <- convratsig(phyl = cleanwhaletree,
+                   phendata = OIEC_Cmetricmatrix,
+                   convtips = convtips2,
+                   nsim = 1000)
+```
+
+Have a look at the results:
+
+```{r}
+ConvReg2_pval
+```
+
+## Convergent regime 3
+
+Select which tips are hypothesised to be convergent:
+
+```{r}
+convtips3 <- c("Mesoplodon_mirus",
+              "Ziphius_cavirostris")
+```
+
+Run the analysis to test whther they are convergent based on the first four C-mtrics of Stayton (2015):
+
+```{r}
+ConvReg3 <- convrat(phyl = cleanwhaletree,
+                        phendata = OIEC_Cmetricmatrix,
+                        convtips = convtips3)
+```
+
+Have a look at the reuslts:
+
+```{r}
+ConvReg3
+```
+
+Now we can get the significance values of this analysis. Note that this can take quite a long time to run:
+
+```{r}
+ConvReg3_pval <- convratsig(phyl = cleanwhaletree,
+                   phendata = OIEC_Cmetricmatrix,
+                   convtips = convtips3,
+                   nsim = 1000)
+```
+
+Have a look at the results:
+
+```{r}
+ConvReg3_pval
+```
