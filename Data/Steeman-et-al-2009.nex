@@ -1,0 +1,187 @@
+#NEXUS
+[R-package APE, Tue Jul 12 00:10:14 2016]
+
+BEGIN TAXA;
+	DIMENSIONS NTAX = 87;
+	TAXLABELS
+		Balaena_mysticetus
+		Eubalaena_australis
+		Eubalaena_glacialis
+		Eubalaena_japonica
+		Caperea_marginata
+		Eschrichtius_robustus
+		Balaenoptera_acutorostrata
+		Balaenoptera_bonaerensis
+		Balaenoptera_physalus
+		Megaptera_novaeangliae
+		Balaenoptera_musculus
+		Balaenoptera_omurai
+		Balaenoptera_borealis
+		Balaenoptera_brydei
+		Balaenoptera_edeni
+		Physeter_macrocephalus
+		Kogia_breviceps
+		Kogia_sima
+		Platanista_gangetica
+		Platanista_minor
+		Tasmacetus_shepherdi
+		Berardius_arnuxii
+		Berardius_bairdii
+		Ziphius_cavirostris
+		Indopacetus_pacificus
+		Hyperoodon_ampullatus
+		Hyperoodon_planifrons
+		Mesoplodon_bidens
+		Mesoplodon_traversii
+		Mesoplodon_ginkgodens
+		Mesoplodon_europaeus
+		Mesoplodon_mirus
+		Mesoplodon_bowdoini
+		Mesoplodon_carlhubbsi
+		Mesoplodon_layardii
+		Mesoplodon_hectori
+		Mesoplodon_densirostris
+		Mesoplodon_stejnegeri
+		Mesoplodon_grayi
+		Mesoplodon_perrini
+		Mesoplodon_peruvianus
+		Lipotes_vexillifer
+		Inia_geoffrensis
+		Pontoporia_blainvillei
+		Delphinapterus_leucas
+		Monodon_monoceros
+		Neophocaena_phocaenoides
+		Phocoena_phocoena
+		Phocoenoides_dalli
+		Phocoena_sinus
+		Phocoena_dioptrica
+		Phocoena_spinipinnis
+		Orcinus_orca
+		Orcaella_brevirostris
+		Grampus_griseus
+		Pseudorca_crassidens
+		Feresa_attenuata
+		Peponocephala_electra
+		Globicephala_macrorhynchus
+		Globicephala_melas
+		Lagenorhynchus_albirostris
+		Lagenorhynchus_acutus
+		Lissodelphis_borealis
+		Lissodelphis_peronii
+		Cephalorhynchus_hectori
+		Cephalorhynchus_commersonii
+		Cephalorhynchus_eutropia
+		Lagenorhynchus_obscurus
+		Lagenorhynchus_obliquidens
+		Cephalorhynchus_heavisidii
+		Lagenorhynchus_australis
+		Lagenorhynchus_cruciger
+		Steno_bredanensis
+		Sotalia_fluviatilis
+		Sotalia_guianensis
+		Lagenodelphis_hosei
+		Stenella_longirostris
+		Stenella_attenuata
+		Tursiops_aduncus
+		Tursiops_truncatus
+		Sousa_chinensis
+		Stenella_clymene
+		Stenella_coeruleoalba
+		Stenella_frontalis
+		Delphinus_tropicalis
+		Delphinus_capensis
+		Delphinus_delphis
+	;
+END;
+BEGIN TREES;
+	TRANSLATE
+		1	Balaena_mysticetus,
+		2	Eubalaena_australis,
+		3	Eubalaena_glacialis,
+		4	Eubalaena_japonica,
+		5	Caperea_marginata,
+		6	Eschrichtius_robustus,
+		7	Balaenoptera_acutorostrata,
+		8	Balaenoptera_bonaerensis,
+		9	Balaenoptera_physalus,
+		10	Megaptera_novaeangliae,
+		11	Balaenoptera_musculus,
+		12	Balaenoptera_omurai,
+		13	Balaenoptera_borealis,
+		14	Balaenoptera_brydei,
+		15	Balaenoptera_edeni,
+		16	Physeter_macrocephalus,
+		17	Kogia_breviceps,
+		18	Kogia_sima,
+		19	Platanista_gangetica,
+		20	Platanista_minor,
+		21	Tasmacetus_shepherdi,
+		22	Berardius_arnuxii,
+		23	Berardius_bairdii,
+		24	Ziphius_cavirostris,
+		25	Indopacetus_pacificus,
+		26	Hyperoodon_ampullatus,
+		27	Hyperoodon_planifrons,
+		28	Mesoplodon_bidens,
+		29	Mesoplodon_traversii,
+		30	Mesoplodon_ginkgodens,
+		31	Mesoplodon_europaeus,
+		32	Mesoplodon_mirus,
+		33	Mesoplodon_bowdoini,
+		34	Mesoplodon_carlhubbsi,
+		35	Mesoplodon_layardii,
+		36	Mesoplodon_hectori,
+		37	Mesoplodon_densirostris,
+		38	Mesoplodon_stejnegeri,
+		39	Mesoplodon_grayi,
+		40	Mesoplodon_perrini,
+		41	Mesoplodon_peruvianus,
+		42	Lipotes_vexillifer,
+		43	Inia_geoffrensis,
+		44	Pontoporia_blainvillei,
+		45	Delphinapterus_leucas,
+		46	Monodon_monoceros,
+		47	Neophocaena_phocaenoides,
+		48	Phocoena_phocoena,
+		49	Phocoenoides_dalli,
+		50	Phocoena_sinus,
+		51	Phocoena_dioptrica,
+		52	Phocoena_spinipinnis,
+		53	Orcinus_orca,
+		54	Orcaella_brevirostris,
+		55	Grampus_griseus,
+		56	Pseudorca_crassidens,
+		57	Feresa_attenuata,
+		58	Peponocephala_electra,
+		59	Globicephala_macrorhynchus,
+		60	Globicephala_melas,
+		61	Lagenorhynchus_albirostris,
+		62	Lagenorhynchus_acutus,
+		63	Lissodelphis_borealis,
+		64	Lissodelphis_peronii,
+		65	Cephalorhynchus_hectori,
+		66	Cephalorhynchus_commersonii,
+		67	Cephalorhynchus_eutropia,
+		68	Lagenorhynchus_obscurus,
+		69	Lagenorhynchus_obliquidens,
+		70	Cephalorhynchus_heavisidii,
+		71	Lagenorhynchus_australis,
+		72	Lagenorhynchus_cruciger,
+		73	Steno_bredanensis,
+		74	Sotalia_fluviatilis,
+		75	Sotalia_guianensis,
+		76	Lagenodelphis_hosei,
+		77	Stenella_longirostris,
+		78	Stenella_attenuata,
+		79	Tursiops_aduncus,
+		80	Tursiops_truncatus,
+		81	Sousa_chinensis,
+		82	Stenella_clymene,
+		83	Stenella_coeruleoalba,
+		84	Stenella_frontalis,
+		85	Delphinus_tropicalis,
+		86	Delphinus_capensis,
+		87	Delphinus_delphis
+	;
+	TREE * UNTITLED = [&R] (((1:8.816019,(2:1.622021,(3:0.347029,4:0.347029):1.274992):7.193998):19.183981,(5:26.063016,(6:17.890655,(((7:5.278071,8:5.278071):9.821253,(9:10.472234,10:10.472234):4.62709):0.967361,(11:12.847395,(12:11.382958,(13:5.265325,(14:4.322022,15:4.322022):0.943303):6.117633):1.464437):3.21929):1.82397):8.172361):1.936984):7.857844,((16:22.044391,(17:8.803018,18:8.803018):13.241373):11.754612,((19:0.28307,20:0.28307):32.107591,((21:19.195664,((22:6.28945,23:6.28945):11.733962,(24:15.669702,((25:11.028304,(26:8.100266,27:8.100266):2.928038):3.511979,(28:13.042869,(29:11.079293,(30:8.925943,(31:8.252103,(32:7.677424,((33:4.732448,(34:4.170968,35:4.170968):0.56148):2.444232,(36:6.375631,((37:4.927159,38:4.927159):0.869428,(39:5.096384,(40:4.166226,41:4.166226):0.930158):0.700202):0.579045):0.801049):0.500744):0.574679):0.67384):2.15335):1.963577):1.497414):1.129419):2.35371):1.172252):12.425865,((42:24.698214,(43:18.226419,44:18.226419):6.471794):1.301786,(((45:5.466432,46:5.466432):8.595122,((47:4.985876,(48:3.706276,49:3.706276):1.2796):0.630505,(50:4.94717,(51:4.045703,52:4.045703):0.901467):0.66921):8.445174):3.877872,(53:10.70277,((54:8.20905,(55:6.04703,(56:5.493241,(57:4.45272,(58:3.048675,(59:1.470782,60:1.470782):1.577893):1.404045):1.040521):0.55379):2.16202):1.228963,(61:8.716039,((62:6.975185,((63:1.361358,64:1.361358):3.902137,((65:3.291163,(66:1.821239,67:1.821239):1.469925):1.279729,(68:3.791853,(69:2.919779,(70:2.096219,(71:1.570433,72:1.570433):0.525786):0.82356):0.872074):0.77904):0.692602):1.71169):1.167873,((73:5.897506,(74:3.212561,75:3.212561):2.684945):1.616888,((76:3.44536,77:3.44536):0.910357,((78:3.07917,(79:2.194413,80:2.194413):0.884757):0.546945,(81:2.83298,(82:1.934812,((83:1.011163,84:1.011163):0.495574,(85:1.268114,(86:0.924862,87:0.924862):0.343252):0.238623):0.428075):0.898168):0.793135):0.729602):3.158677):0.628664):0.572981):0.721974):1.264757):7.236657):8.060574):5.621528):0.769132):1.408343):2.058841);
+END;
