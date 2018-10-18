@@ -26,7 +26,7 @@ library(convevol)
 Before running the analysis though, we need to convert the dataframe containing the PC scores and the species names into a matrix so that we run the analysis:
 
 ```{r}
-OIEC_Cmetricmatrix <- as.matrix(array(RDC_df[, 1:2])) # The numbers here are what PCs you select for the analysis
+OIEC_Cmetricmatrix <- as.matrix(array(OIEC_df[, 1:2])) # The numbers here are what PCs you select for the analysis
 ```
 
 ## Convergent regime 1
@@ -73,20 +73,20 @@ ConvReg1_pval
 Select which tips are hypothesised to be convergent:
 
 ```{r}
-convtips2 <- c("Berardius_arnuxii",
-              "Mesoplodon_grayi",
+convtips2 <- c("Mesoplodon_grayi",
               "Mesoplodon_hectori",
               "Mesoplodon_bidens",
               "Hyperoodon_ampullatus",
               "Tasmacetus_shepherdi",
-              "Physeter_macrocephalus")
+              "Physeter_macrocephalus",
+              "Berardius_arnuxii")
 ```
 
-Run the analysis to test whther they are convergent based on the first four C-mtrics of Stayton (2015):
+Run the analysis to test whether they are convergent based on the first four C-mtrics of Stayton (2015):
 
 ```{r}
 ConvReg2 <- convrat(phyl = cleanwhaletree,
-                        phendata = OIEC_Cmetricmatrix,
+                        phendata = OIEC_Cmetricmatrix,                        
                         convtips = convtips2)
 ```
 

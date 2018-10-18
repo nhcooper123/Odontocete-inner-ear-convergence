@@ -69,7 +69,7 @@ slidematrix <- as.matrix(read.csv(here("Data/Sliding-matrix_L371-cochlea-dataset
 Additionally, we will also need to give R the metadata of the specimens (e.g. taxon name, habitat, regime). This will be used in downstream analyses, but we'll load it in now:
 
 ```{r}
-OIEC_metadata <- read.csv(here("Data/RDC_Habitat-type_2.csv"))
+OIEC_metadata <- read.csv(here("Data/OIEC_meta-data_1.csv"))
 ```
 
 Then we can actually perform the Procrustes superimposition:
@@ -89,9 +89,7 @@ dimnames(OIEC_gpa$coords)[[3]] <- OIEC_metadata$Taxon
 Next, we will take out procrustes coordinates and project them into tangent space along their main axes of variation i.e. their principal components.we will use the Geomorph function 'plotTangentSpace' to do this:
 
 ```{r}
-OIEC_pca <- plotTangentSpace(OIEC_gpa$coords, 
-                            groups = OIEC_metadata$Habitat,
-                            legend = TRUE, label = TRUE)
+OIEC_pca <- plotTangentSpace(OIEC_gpa$coords, legend = TRUE, label = TRUE)
 ```
 
 We can visualise the outputs of the PCA in several different ways:
@@ -114,7 +112,7 @@ OIEC_pca$rotation
 Let's also write the PC scores to a csv file so that we can use them in later analyses:
 
 ```{r}
-write.csv(OIEC_pcscores, file = here("Data/OIEC_pcscores_1.csv"))
+write.csv(OIEC_pca$pc.scores, file = here("Data/OIEC_pcscores_1.csv"))
 ```
 
 Finally, in order to perform further analyses on the PC scores we will combine them into a dataframe with the species names from the metadata loaded in above:

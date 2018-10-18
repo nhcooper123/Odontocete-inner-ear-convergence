@@ -18,7 +18,9 @@ This document will allow you to use the Kmult statistic to calculate phylogeneti
 First, we will load in the libraries that will be used to do all the analyses:
 
 ```{r}
+library(here)
 library(ape)
+library(phytools)
 library(geomorph)
 library(surface)
 library(tibble)
@@ -30,6 +32,13 @@ The next thing we need to do is load in the odontocete phylogeny that we will us
 
 ```{r}
 whaletree <- read.nexus(here("Data/Steeman-et-al-2009.nex"))
+```
+
+for some reason (probably due to rounding errors when it was exported), this phylogeny is not ultramtric, despite it consisting entirely of extant taxa. So we need to force the tree to be ultrametric, which can be done by:
+
+```{r}
+cleanwhaletree <- force.ultrametric(whaletree)
+is.ultrametric(cleanwhaletree) #check to see if it's ultramtric - should say TRUE
 ```
 
 However, this phylogeny contains taxa that are not part of our sample. These additional taxa therefore need to be removed from the phylogeny so that only taxa we have PC scores for remain. There are several ways to do this and some are more efficient than others. Here though I have just manually created a list of the taxa to be dropped from the tree (this would become unfeasible if dealing with large numbers of taxa) and used that. Once the list is made we then use it to create our pruned tree:
@@ -74,7 +83,8 @@ droppedtips <- c("Balaena_mysticetus",
                  "Stenella_frontalis", 
                  "Delphinus_tropicalis", 
                  "Delphinus_capensis")
-cleanwhaletree <- drop.tip(whaletree, droppedtips)
+cleanwhaletree <- drop.tip(cleanwhaletree, droppedtips)
+is.ultrametric(cleanwhaletree) #check to see if it's ultramtric - should say TRUE
 ```
 
 We'll also save this pruned tree to file so that we can load it into other scripts easily in future:
@@ -102,7 +112,7 @@ summary(OIEC_Kmult)
 
 ## Running the SURFACE analysis
 
-Next we want to try and detect convergent evolution in the shape of odontocete cochleae. to do this we will use the SURFACE package by Ingram & Mahler (2013). it uses an OU process (a random walk where trait values are pulled back towards an optimal value i.e. an adaptive peak/long term mean). the application of the OU process to evolution along a phylogenetic tree is known as a Hansen model. Different branches of the phylogeny can be modeled as having different optima.  
+Next we want to try and detect convergent evolution in the shape of odontocete cochleae. to do this we will use the SURFACE package by Ingram & Mahler (2013). it uses an OU process (a random walk where trait values are pulled back towards an optimal value i.e. an adaptive peak/long term mean). The application of the OU process to evolution along a phylogenetic tree is known as a Hansen model. Different branches of the phylogeny can be modeled as having different optima.  
 
 A SURFACE analysis is split into a forward phase and a backward phase. in the forward phase SURFACE adds regimes to a Hansen model, starting with a model in which the entire clade is in a single regime. Maximum liklihood is then used to estimate parameter values and model likelihoods. regime shifts are then added one at a time to the origin of each branch. Likelihoood estimation is then repeated and the branch with the lowest AICc score is retained. This is repeated until the change in AICc is less than predetermined value (usually 0). In the backward phase, the completely fitted Hansen model is then used to test pairwise collapses of regimes into a single convergent regime. AICc scores are then calculated for each of these models and compared to the the previous model. If it improves the AICc score then it is retained as a convergent regime. this is repeated until themodel stops improving beyond a threshold.
 
@@ -115,7 +125,7 @@ cleanwhaletree_nodes <- nameNodes(cleanwhaletree)
 str(cleanwhaletree_nodes)
 ```
 
-Next, we will make the rownames species names and remove that column from the dataframe (X in this case). We will then select the first 6 PC scores to use for the SURFACE analysis:
+Next, we will make the rownames species names and remove that column from the dataframe (X in this case). We will then select the first 2 PC scores to use for the SURFACE analysis:
 
 ```{r}
 rownames(OIEC_df) <- OIEC_df$species
