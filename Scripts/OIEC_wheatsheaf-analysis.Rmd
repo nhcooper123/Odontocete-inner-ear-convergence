@@ -89,20 +89,20 @@ Here, we are testing if the Wheatsheaf index value is higher than that expected 
 ### Regime 1
 
 ```{r}
-windex_greenreg_pval <- test.windex(OIEC_wheatsheafdf_greenreg, cleanwhaletree, traits = c("PC1","PC2"), focal = OIEC_wheatsheafdf_greenreg[, 2], reps = 1000)
+windex_greenreg_pval <- test.windex(OIEC_wheatsheafdf_greenreg, cleanwhaletree, traits = c("PC1","PC2"), focal = OIEC_wheatsheafdf_greenreg[, 2], reps = 1000, plot = FALSE)
 windex_greenreg_pval # view the result
 ```
 
 ### Regime 2
 
 ```{r}
-windex_redreg_pval <- test.windex(OIEC_wheatsheafdf_redreg, cleanwhaletree, traits = c("PC1","PC2"), focal = OIEC_wheatsheafdf_redreg[, 2], reps = 1000)
+windex_redreg_pval <- test.windex(OIEC_wheatsheafdf_redreg, cleanwhaletree, traits = c("PC1","PC2"), focal = OIEC_wheatsheafdf_redreg[, 2], reps = 1000, plot = FALSE)
 windex_redreg_pval # view the result
 ```
 
 ### Regime 3
 
 ```{r}
-windex_bluereg_pval <- test.windex(OIEC_wheatsheafdf_bluereg, cleanwhaletree, traits = c("PC1","PC2"), focal = OIEC_wheatsheafdf_bluereg[, 2], reps = 1000)
+windex_bluereg_pval <- test.windex(OIEC_wheatsheafdf_bluereg, cleanwhaletree, traits = c("PC1","PC2"), focal = OIEC_wheatsheafdf_bluereg[, 2], reps = 1000, plot = FALSE)
 windex_bluereg_pval # view the result
 ```

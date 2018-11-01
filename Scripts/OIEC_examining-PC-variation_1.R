@@ -3,6 +3,7 @@
 
 library(geomorph)
 library(Morpho)
+library(landvR)
 
 ## need to have alrfeady run the GPA and PCA for the OIEC analysis
 
@@ -55,6 +56,25 @@ plotRefToTarget(ref, OIEC_pca$pc.shapes$PC1max, mesh = refmesh, method = "surfac
 plotRefToTarget(ref, OIEC_pca$pc.shapes$PC2min, mesh = refmesh, method = "surface")
 plotRefToTarget(ref, OIEC_pca$pc.shapes$PC2max, mesh = refmesh, method = "surface")
 
+
+## Using landvR to look at landmark variation
+
+# transform data into 2d array
+array <- two.d.array(OIEC_gpa$coords)
+
+# have to use prcomp to ordinate data for this analysis
+ordination <- stats::prcomp(array)
+
+# calculate the coordinate differences between the two PC extremes
+PC1var <- variation.range(OIEC_gpa, axis = 1, ordination = ordination, type = "spherical", angle = "degree", what = "radius")
+PC1var
+
+# assign coordinates of PC extremes to their oen objects for plotting
+hyp1 <- OIEC_pca$pc.shapes$PC1min
+hyp2<- OIEC_pca$pc.shapes$PC1max
+
+# plot range of PC variation using a heat colour mode
+procrustes.var.plot(hyp1, hyp2, col = heat.colors, col.val = PC1var[, "radius"], labels = TRUE)
 
 
 

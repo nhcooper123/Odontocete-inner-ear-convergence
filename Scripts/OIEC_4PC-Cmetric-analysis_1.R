@@ -1,8 +1,12 @@
 
 
+
 library(convevol)
 
-OIEC_Cmetricmatrix <- as.matrix(array(OIEC_df[, 1:4])) # The numbers here are what PCs you select for the analysis
+OIEC_Cmetricmatrix <-
+  as.matrix(array(OIEC_df[, 1:4])) # The numbers here are what PCs you select for the analysis
+
+cleanwhaletree <- read.tree("Data/OIEC_cleanwhaletree_1.tree")
 
 convtips1 <- c(
   "Cephalorhynchus_commersonii",
@@ -48,5 +52,5 @@ ConvReg1
 
 ConvReg1_pval <- convratsig(phyl = cleanwhaletree,
                             phendata = OIEC_Cmetricmatrix,
-                            convtips = c
+                            convtips = c)
 ConvReg1_pval
