@@ -1,4 +1,4 @@
-#### Chi square tests to look at patterns between convergent regimes and ecology
+#### Chi-squared tests to look at patterns between convergent regimes and ecology
 #### created 31/10/18 by Travis Park
 
 
