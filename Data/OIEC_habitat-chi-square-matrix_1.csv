@@ -1,0 +1,6 @@
+,blue,red,green
+riverine,0,0,0
+riverine/nearshore,0,0,0
+nearshore,0,0,0
+nearshore/oceanic,0,0,1
+oceanic,2,7,2
