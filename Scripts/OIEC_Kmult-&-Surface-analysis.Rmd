@@ -180,7 +180,7 @@ bwdsummary$n_regimes # optimal number of regimes
 Now we can plot it and see those convergent regimes on the phylogeny:
 
 ```{r}
-surfaceTreePlot(cleanwhaletree_nodes, bwd[[kk]], labelshifts = TRUE)
+surfaceTreePlot(cleanwhaletree_nodes, bwd[[kk]], cols = c("coral", "mediumpurple1", "palegreen"), convcol = TRUE,  labelshifts = TRUE)
 ```
 
 We can also prodce scatterplots of trait values and optima:
